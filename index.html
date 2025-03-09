@@ -6,8 +6,8 @@
     <title>休閒測驗</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
             text-align: center;
             margin: 0;
             padding: 20px;
@@ -18,12 +18,28 @@
             margin: auto;
             background: white;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
-            color: #333;
+            color: #444;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background: #ddd;
+            border-radius: 5px;
+            height: 10px;
+            margin: 10px 0;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: #4CAF50;
+            border-radius: 5px;
+            transition: 0.3s;
         }
 
         .question {
@@ -67,7 +83,6 @@
             display: none;
         }
 
-        /* 當選擇時變色 */
         input[type="radio"]:checked + label {
             background: #4CAF50;
             color: white;
@@ -97,6 +112,7 @@
 
     <div class="container">
         <h1>你的休閒生活評測</h1>
+        <div class="progress-bar"><div class="progress"></div></div>
         <form id="quizForm">
             <div id="questions"></div>
             <button type="button" onclick="calculateScore()">送出</button>
@@ -133,7 +149,7 @@
                     <p class="scale-label">0 = 完全不同意，5 = 完全同意</p>
                     <div class="options">
                         ${[0, 1, 2, 3, 4, 5].map(num => 
-                            `<input type="radio" id="q${index}_${num}" name="q${index}" value="${num}">
+                            `<input type="radio" id="q${index}_${num}" name="q${index}" value="${num}" onchange="updateProgress()">
                              <label for="q${index}_${num}">${num}</label>`
                         ).join('')}
                     </div>
@@ -142,9 +158,14 @@
             questionContainer.innerHTML += questionHTML;
         });
 
+        function updateProgress() {
+            const total = 16;
+            const answered = document.querySelectorAll("input[type='radio']:checked").length;
+            document.querySelector(".progress").style.width = `${(answered / total) * 100}%`;
+        }
+
         function calculateScore() {
             let totalScore = 0;
-
             for (let i = 0; i < 16; i++) {
                 let selected = document.querySelector(`input[name="q${i}"]:checked`);
                 if (selected) {
@@ -159,16 +180,10 @@
                 }
             }
 
-            let resultPage = "";
-            if (totalScore <= 20) {
-                resultPage = "resultA.html";
-            } else if (totalScore <= 40) {
-                resultPage = "resultB.html";
-            } else if (totalScore <= 60) {
-                resultPage = "resultC.html";
-            } else {
-                resultPage = "resultD.html";
-            }
+            let resultPage = totalScore <= 20 ? "resultA.html" :
+                            totalScore <= 40 ? "resultB.html" :
+                            totalScore <= 60 ? "resultC.html" :
+                            "resultD.html";
 
             window.location.href = `${resultPage}?score=${totalScore}`;
         }
