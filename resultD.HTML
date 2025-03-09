@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測驗結果</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>測驗結果</h1>
+    <p id="scoreText"></p>
+    <p>你是無趣的人，你的休閒生活跟你一樣無趣！還好有修休閒哲學，還有救！</p>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById("scoreText").textContent = `你的總分：${params.get("score")}`;
+    </script>
+</body>
+</html>
